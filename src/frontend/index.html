@@ -4,149 +4,186 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CryptoFarmer - Bot di Trading</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" type="image/png" href="assets/logo.png">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              950: '#1e1b4b',
+            },
+            secondary: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+              950: '#4a044e',
+            },
+            accent: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
+              950: '#4c0519',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <div class="container-fluid">
-    <div class="row">
-      <!-- Sidebar -->
-      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-        <div class="position-sticky pt-3">
-          <div class="text-center mb-4">
-            <img class="logo" src="assets/logo.png" alt="CryptoFarmer">
-            <p class="text-muted">Pannello di Controllo Bot</p>
-          </div>
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#" data-page="dashboard">
-                <i class="bi bi-speedometer2 me-2"></i>
-                Dashboard
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div class="h-full flex flex-col">
+        <div class="flex flex-col items-center p-5 border-b border-gray-200 dark:border-gray-700">
+          <img class="h-22 w-auto mb-2" src="assets/logo.png" alt="CryptoFarmer">
+          <p class="text-sm text-gray-500 dark:text-gray-400">Pannello di Controllo Bot</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3">
+          <ul class="space-y-2">
+            <li>
+              <a class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 active bg-primary-50 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300" href="#" data-page="dashboard">
+                <i class="bi bi-speedometer2 mr-3 text-lg"></i>
+                <span class="font-medium">Dashboard</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="bots">
-                <i class="bi bi-robot me-2"></i>
-                Bot di Trading
+            <li>
+              <a class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" href="#" data-page="bots">
+                <i class="bi bi-robot mr-3 text-lg"></i>
+                <span class="font-medium">Bot di Trading</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="portfolio">
-                <i class="bi bi-wallet2 me-2"></i>
-                Portafoglio
+            <li>
+              <a class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" href="#" data-page="portfolio">
+                <i class="bi bi-wallet2 mr-3 text-lg"></i>
+                <span class="font-medium">Portafoglio</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="settings">
-                <i class="bi bi-gear me-2"></i>
-                Impostazioni
+            <li>
+              <a class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" href="#" data-page="settings">
+                <i class="bi bi-gear mr-3 text-lg"></i>
+                <span class="font-medium">Impostazioni</span>
               </a>
             </li>
           </ul>
-          
-          <hr class="text-light">
-          
-          <div class="px-3 mt-4">
-            <button id="createBotBtn" class="btn btn-success w-100">
-              <i class="bi bi-plus-circle me-2"></i>
-              Crea Nuovo Bot
-            </button>
-          </div>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+          <button id="createBotBtn" class="w-full flex items-center justify-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200">
+            <i class="bi bi-plus-circle mr-2"></i>
+            <span>Crea Nuovo Bot</span>
+          </button>
           
           <!-- Dark Mode Toggle -->
-          <div class="px-3 mt-3 d-flex align-items-center justify-content-between">
-            <span class="text-light">Modalità Scura</span>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="darkModeToggle">
-              <label class="form-check-label text-light" for="darkModeToggle">
-                <i class="bi bi-moon-stars"></i>
-              </label>
-            </div>
-          </div>
-        </div>
-      </nav>
-      
-      <!-- Main content -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <!-- Add hamburger menu for mobile -->
-        <div class="navbar navbar-dark bg-dark d-md-none mb-3">
-          <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+          <div class="flex items-center justify-between mt-4">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Modalità Scura</span>
+            <button id="darkModeToggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-gray-200 dark:bg-gray-700 transition-colors duration-200 focus:outline-none">
+              <span class="sr-only">Toggle dark mode</span>
+              <span class="inline-block w-4 h-4 transform translate-x-1 dark:translate-x-6 bg-white rounded-full transition-transform duration-200 ease-in-out">
+                <i class="bi bi-moon-stars text-xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 dark:text-gray-800"></i>
+              </span>
             </button>
-            <span class="navbar-brand">CryptoFarmer</span>
           </div>
         </div>
-        
+      </div>
+    </aside>
+    
+    <!-- Main content -->
+    <div class="flex-1 md:ml-64">
+      <!-- Mobile header -->
+      <div class="md:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
+        <button id="sidebarToggle" class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none">
+          <i class="bi bi-list text-2xl"></i>
+        </button>
+        <div class="flex items-center">
+          <img class="h-8 w-auto" src="assets/logo.png" alt="CryptoFarmer">
+          <span class="ml-2 font-semibold text-gray-800 dark:text-white">CryptoFarmer</span>
+        </div>
+        <div class="w-8"></div> <!-- Spacer for balance -->
+      </div>
+      
+      <main class="p-4 md:p-6 overflow-y-auto h-screen">
         <div id="pageContent">
           <!-- Dashboard Page -->
           <div id="dashboardPage" class="page-content active">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 class="h2">Dashboard</h1>
-              <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group me-2">
-                  <button type="button" class="btn btn-sm btn-outline-secondary refresh-data">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
-                  </button>
-                </div>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
+              <button type="button" class="mt-3 md:mt-0 flex items-center px-3 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 refresh-data">
+                <i class="bi bi-arrow-clockwise mr-2"></i>
+                <span>Aggiorna</span>
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl shadow-md p-6 text-white">
+                <h5 class="text-lg font-medium opacity-90 mb-2">Saldo Totale</h5>
+                <h2 class="text-3xl font-bold mb-1" id="totalBalance">€0.00</h2>
+                <p class="flex items-center text-sm opacity-90" id="balanceChange">
+                  <i class="bi bi-arrow-up mr-1"></i>
+                  0.00%
+                </p>
+              </div>
+              <div class="bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl shadow-md p-6 text-white">
+                <h5 class="text-lg font-medium opacity-90 mb-2">Bot Attivi</h5>
+                <h2 class="text-3xl font-bold mb-1" id="activeBots">0</h2>
+                <p class="text-sm opacity-90">Bot di trading in esecuzione</p>
+              </div>
+              <div class="bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl shadow-md p-6 text-white">
+                <h5 class="text-lg font-medium opacity-90 mb-2">Profitto Totale</h5>
+                <h2 class="text-3xl font-bold mb-1" id="totalProfit">€0.00</h2>
+                <p class="flex items-center text-sm opacity-90" id="profitChange">
+                  <i class="bi bi-arrow-up mr-1"></i>
+                  0.00%
+                </p>
               </div>
             </div>
             
-            <div class="row mb-4">
-              <div class="col-md-4">
-                <div class="card bg-primary text-white">
-                  <div class="card-body">
-                    <h5 class="card-title">Saldo Totale</h5>
-                    <h2 class="card-text" id="totalBalance">€0.00</h2>
-                    <p class="card-text"><small id="balanceChange">0.00%</small></p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+                  <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-4">Panoramica Prestazioni</h5>
+                  <div class="h-80">
+                    <canvas id="performanceChart"></canvas>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="card bg-success text-white">
-                  <div class="card-body">
-                    <h5 class="card-title">Bot Attivi</h5>
-                    <h2 class="card-text" id="activeBots">0</h2>
-                    <p class="card-text"><small>Bot di trading in esecuzione</small></p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card bg-info text-white">
-                  <div class="card-body">
-                    <h5 class="card-title">Profitto Totale</h5>
-                    <h2 class="card-text" id="totalProfit">€0.00</h2>
-                    <p class="card-text"><small id="profitChange">0.00%</small></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-8">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5>Panoramica Prestazioni</h5>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="performanceChart" height="300"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5>Operazioni Recenti</h5>
-                  </div>
-                  <div class="card-body">
-                    <div id="recentTrades" class="list-group">
-                      <!-- Recent trades will be loaded here -->
-                      <div class="text-center text-muted py-3">
-                        <i class="bi bi-clock-history fs-4 d-block mb-2"></i>
-                        Nessuna operazione recente
-                      </div>
+              <div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+                  <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-4">Operazioni Recenti</h5>
+                  <div id="recentTrades" class="space-y-3">
+                    <!-- Recent trades will be loaded here -->
+                    <div class="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+                      <i class="bi bi-clock-history text-3xl mb-2"></i>
+                      <p>Nessuna operazione recente</p>
                     </div>
                   </div>
                 </div>
@@ -156,23 +193,25 @@
           
           <!-- Bots Page -->
           <div id="botsPage" class="page-content">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 class="h2">Bot di Trading</h1>
-              <div class="btn-toolbar mb-2 mb-md-0">
-                <button id="refreshBotsBtn" class="btn btn-sm btn-outline-secondary me-2">
-                  <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Bot di Trading</h1>
+              <div class="mt-3 md:mt-0 flex space-x-3">
+                <button id="refreshBotsBtn" class="flex items-center px-3 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                  <i class="bi bi-arrow-clockwise mr-2"></i>
+                  <span>Aggiorna</span>
                 </button>
-                <button id="newBotBtn" class="btn btn-sm btn-primary">
-                  <i class="bi bi-plus-circle me-1"></i>Nuovo Bot
+                <button id="newBotBtn" class="flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200">
+                  <i class="bi bi-plus-circle mr-2"></i>
+                  <span>Nuovo Bot</span>
                 </button>
               </div>
             </div>
             
-            <div class="row" id="botsList">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="botsList">
               <!-- Bots will be loaded here -->
-              <div class="col-12 text-center text-muted py-5" id="noBotsMessage">
-                <i class="bi bi-robot fs-1 d-block mb-3"></i>
-                <h4>Nessun bot di trading trovato</h4>
+              <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400" id="noBotsMessage">
+                <i class="bi bi-robot text-5xl mb-4"></i>
+                <h4 class="text-xl font-medium text-gray-800 dark:text-white mb-2">Nessun bot di trading trovato</h4>
                 <p>Clicca sul pulsante "Nuovo Bot" per creare il tuo primo bot di trading.</p>
               </div>
             </div>
@@ -180,48 +219,43 @@
           
           <!-- Portfolio Page -->
           <div id="portfolioPage" class="page-content">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 class="h2">Portafoglio</h1>
-              <div class="btn-toolbar mb-2 mb-md-0">
-                <button id="refreshPortfolioBtn" class="btn btn-sm btn-outline-secondary">
-                  <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
-                </button>
-              </div>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Portafoglio</h1>
+              <button id="refreshPortfolioBtn" class="mt-3 md:mt-0 flex items-center px-3 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                <i class="bi bi-arrow-clockwise mr-2"></i>
+                <span>Aggiorna</span>
+              </button>
             </div>
             
-            <div class="row mb-4">
-              <div class="col-md-8">
-                <div class="card">
-                  <div class="card-header">
-                    <h5>Asset</h5>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+              <div class="lg:col-span-3">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+                  <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h5 class="text-lg font-medium text-gray-800 dark:text-white">Asset</h5>
                   </div>
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Asset</th>
-                            <th>Saldo</th>
-                            <th>Valore (USDT)</th>
-                            <th>Allocazione</th>
-                            <th>Variazione 24h</th>
-                          </tr>
-                        </thead>
-                        <tbody id="assetsList">
-                          <!-- Assets will be loaded here -->
-                        </tbody>
-                      </table>
-                    </div>
+                  <div class="overflow-x-auto">
+                    <table class="w-full">
+                      <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Asset</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Saldo</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Valore (USDT)</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Allocazione</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Variazione 24h</th>
+                        </tr>
+                      </thead>
+                      <tbody id="assetsList" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Assets will be loaded here -->
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="card">
-                  <div class="card-header">
-                    <h5>Allocazione Portafoglio</h5>
-                  </div>
-                  <div class="card-body">
-                    <canvas id="allocationChart" height="250"></canvas>
+              <div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                  <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-4">Allocazione Portafoglio</h5>
+                  <div class="h-64">
+                    <canvas id="allocationChart"></canvas>
                   </div>
                 </div>
               </div>
@@ -230,67 +264,68 @@
           
           <!-- Settings Page -->
           <div id="settingsPage" class="page-content">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 class="h2">Impostazioni</h1>
-              <div class="btn-toolbar mb-2 mb-md-0">
-                <button id="saveSettingsBtn" class="btn btn-sm btn-primary">
-                  <i class="bi bi-save me-1"></i>Salva Impostazioni
-                </button>
-              </div>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Impostazioni</h1>
+              <button id="saveSettingsBtn" class="mt-3 md:mt-0 flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200">
+                <i class="bi bi-save mr-2"></i>
+                <span>Salva Impostazioni</span>
+              </button>
             </div>
             
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5>Configurazione API</h5>
-                  </div>
-                  <div class="card-body">
-                    <form id="apiSettingsForm">
-                      <div class="mb-3">
-                        <label for="apiKey" class="form-label">Chiave API</label>
-                        <input type="text" class="form-control" id="apiKey" placeholder="Inserisci la tua Chiave API BitGet">
-                      </div>
-                      <div class="mb-3">
-                        <label for="secretKey" class="form-label">Chiave Segreta</label>
-                        <input type="password" class="form-control" id="secretKey" placeholder="Inserisci la tua Chiave Segreta BitGet">
-                      </div>
-                      <div class="mb-3">
-                        <label for="passphrase" class="form-label">Passphrase</label>
-                        <input type="password" class="form-control" id="passphrase" placeholder="Inserisci la tua Passphrase BitGet">
-                      </div>
-                      <button type="button" id="testApiBtn" class="btn btn-outline-primary">
-                        <i class="bi bi-check-circle me-1"></i>Testa Connessione
-                      </button>
-                    </form>
-                  </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+                  <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-4">Configurazione API</h5>
+                  <form id="apiSettingsForm" class="space-y-4">
+                    <div>
+                      <label for="apiKey" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chiave API</label>
+                      <input type="text" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="apiKey" placeholder="Inserisci la tua Chiave API BitGet">
+                    </div>
+                    <div>
+                      <label for="secretKey" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chiave Segreta</label>
+                      <input type="password" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="secretKey" placeholder="Inserisci la tua Chiave Segreta BitGet">
+                    </div>
+                    <div>
+                      <label for="passphrase" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Passphrase</label>
+                      <input type="password" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="passphrase" placeholder="Inserisci la tua Passphrase BitGet">
+                    </div>
+                    <button type="button" id="testApiBtn" class="inline-flex items-center px-4 py-2 border border-primary-500 text-primary-600 dark:text-primary-400 bg-white dark:bg-gray-800 rounded-lg hover:bg-primary-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200">
+                      <i class="bi bi-check-circle mr-2"></i>
+                      <span>Testa Connessione</span>
+                    </button>
+                  </form>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="card mb-4">
-                  <div class="card-header">
-                    <h5>Impostazioni Notifiche</h5>
-                  </div>
-                  <div class="card-body">
-                    <form id="notificationSettingsForm">
-                      <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="emailNotifications">
-                        <label class="form-check-label" for="emailNotifications">Notifiche Email</label>
-                      </div>
-                      <div class="mb-3">
-                        <label for="emailAddress" class="form-label">Indirizzo Email</label>
-                        <input type="email" class="form-control" id="emailAddress" placeholder="Inserisci il tuo indirizzo email">
-                      </div>
-                      <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="tradeNotifications">
-                        <label class="form-check-label" for="tradeNotifications">Notifiche Operazioni</label>
-                      </div>
-                      <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="errorNotifications">
-                        <label class="form-check-label" for="errorNotifications">Notifiche Errori</label>
-                      </div>
-                    </form>
-                  </div>
+              <div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+                  <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-4">Impostazioni Notifiche</h5>
+                  <form id="notificationSettingsForm" class="space-y-4">
+                    <div class="flex items-center">
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="emailNotifications" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Notifiche Email</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label for="emailAddress" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Indirizzo Email</label>
+                      <input type="email" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="emailAddress" placeholder="Inserisci il tuo indirizzo email">
+                    </div>
+                    <div class="flex items-center">
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="tradeNotifications" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Notifiche Operazioni</span>
+                      </label>
+                    </div>
+                    <div class="flex items-center">
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="errorNotifications" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Notifiche Errori</span>
+                      </label>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -301,125 +336,180 @@
   </div>
   
   <!-- Create Bot Modal -->
-  <div class="modal fade" id="createBotModal" tabindex="-1" aria-labelledby="createBotModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="createBotModalLabel">Crea Nuovo Bot di Trading</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div id="createBotModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="createBotModalLabel" aria-hidden="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="createBotModalLabel">Crea Nuovo Bot di Trading</h3>
+              <div class="mt-4">
+                <form id="createBotForm" class="space-y-4">
+                  <div>
+                    <label for="botSymbol" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Coppia di Trading</label>
+                    <select class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botSymbol" required>
+                      <option value="">Seleziona una coppia di trading</option>
+                      <option value="BTCUSDT">BTC/USDT</option>
+                      <option value="ETHUSDT">ETH/USDT</option>
+                      <option value="BNBUSDT">BNB/USDT</option>
+                      <option value="ADAUSDT">ADA/USDT</option>
+                      <option value="DOGEUSDT">DOGE/USDT</option>
+                      <option value="XRPUSDT">XRP/USDT</option>
+                      <option value="DOTUSDT">DOT/USDT</option>
+                      <option value="SOLUSDT">SOL/USDT</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="botStrategy" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Strategia di Trading</label>
+                    <select class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botStrategy" required>
+                      <option value="">Seleziona una strategia</option>
+                      <option value="sma">Incrocio SMA</option>
+                      <option value="rsi">RSI (Relative Strength Index)</option>
+                      <option value="macd">MACD (Moving Average Convergence Divergence)</option>
+                    </select>
+                    <div id="strategyDescription" class="mt-2 text-sm text-gray-500 dark:text-gray-400"></div>
+                  </div>
+                  
+                  <div id="strategyParams">
+                    <!-- Strategy parameters will be loaded here based on selection -->
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="botInterval" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Intervallo Temporale</label>
+                      <select class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botInterval" required>
+                        <option value="1m">1 minuto</option>
+                        <option value="1m">1 minuto</option>
+                        <option value="5m">5 minuti</option>
+                        <option value="15m">15 minuti</option>
+                        <option value="30m">30 minuti</option>
+                        <option value="1h" selected>1 ora</option>
+                        <option value="4h">4 ore</option>
+                        <option value="1d">1 giorno</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="botAmount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Importo Operazione</label>
+                      <div class="flex">
+                        <input type="number" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botAmount" value="0.001" min="0.0001" step="0.0001" required>
+                        <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400" id="amountSymbol">BTC</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="botStopLoss" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Stop Loss (%)</label>
+                      <div class="flex">
+                        <input type="number" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botStopLoss" value="5" min="0.1" max="50" step="0.1" required>
+                        <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label for="botTakeProfit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Take Profit (%)</label>
+                      <div class="flex">
+                        <input type="number" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" id="botTakeProfit" value="10" min="0.1" max="100" step="0.1" required>
+                        <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center mt-4">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="botEnabled" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                      <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Attiva bot immediatamente dopo la creazione</span>
+                    </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="modal-body">
-          <form id="createBotForm">
-            <div class="mb-3">
-              <label for="botSymbol" class="form-label">Coppia di Trading</label>
-              <select class="form-select" id="botSymbol" required>
-                <option value="">Seleziona una coppia di trading</option>
-                <option value="BTCUSDT">BTC/USDT</option>
-                <option value="ETHUSDT">ETH/USDT</option>
-                <option value="BNBUSDT">BNB/USDT</option>
-                <option value="ADAUSDT">ADA/USDT</option>
-                <option value="DOGEUSDT">DOGE/USDT</option>
-                <option value="XRPUSDT">XRP/USDT</option>
-                <option value="DOTUSDT">DOT/USDT</option>
-                <option value="SOLUSDT">SOL/USDT</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="botStrategy" class="form-label">Strategia di Trading</label>
-              <select class="form-select" id="botStrategy" required>
-                <option value="">Seleziona una strategia</option>
-                <option value="sma">Incrocio SMA</option>
-                <option value="rsi">RSI (Relative Strength Index)</option>
-                <option value="macd">MACD (Moving Average Convergence Divergence)</option>
-              </select>
-              <div id="strategyDescription" class="form-text mt-2"></div>
-            </div>
-            
-            <div id="strategyParams">
-              <!-- Strategy parameters will be loaded here based on selection -->
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="botInterval" class="form-label">Intervallo Temporale</label>
-                <select class="form-select" id="botInterval" required>
-                  <option value="1m">1 minuto</option>
-                  <option value="5m">5 minuti</option>
-                  <option value="15m">15 minuti</option>
-                  <option value="30m">30 minuti</option>
-                  <option value="1h" selected>1 ora</option>
-                  <option value="4h">4 ore</option>
-                  <option value="1d">1 giorno</option>
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="botAmount" class="form-label">Importo Operazione</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="botAmount" value="0.001" min="0.0001" step="0.0001" required>
-                  <span class="input-group-text" id="amountSymbol">BTC</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="botStopLoss" class="form-label">Stop Loss (%)</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="botStopLoss" value="5" min="0.1" max="50" step="0.1" required>
-                  <span class="input-group-text">%</span>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label for="botTakeProfit" class="form-label">Take Profit (%)</label>
-                <div class="input-group">
-                  <input type="number" class="form-control" id="botTakeProfit" value="10" min="0.1" max="100" step="0.1" required>
-                  <span class="input-group-text">%</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-check form-switch mb-3">
-              <input class="form-check-input" type="checkbox" id="botEnabled">
-              <label class="form-check-label" for="botEnabled">Attiva bot immediatamente dopo la creazione</label>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-          <button type="button" class="btn btn-primary" id="saveBotBtn">Crea Bot</button>
+        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="button" id="saveBotBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm">
+            Crea Bot
+          </button>
+          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" data-dismiss="modal">
+            Annulla
+          </button>
         </div>
       </div>
     </div>
   </div>
   
   <!-- Bot Details Modal -->
-  <div class="modal fade" id="botDetailsModal" tabindex="-1" aria-labelledby="botDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="botDetailsModalLabel">Dettagli Bot</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div id="botDetailsModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="botDetailsModalLabel" aria-hidden="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="botDetailsModalLabel">Dettagli Bot</h3>
+              <div class="mt-4" id="botDetailsContent">
+                <!-- Bot details will be loaded here -->
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="modal-body" id="botDetailsContent">
-          <!-- Bot details will be loaded here -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-          <button type="button" class="btn btn-danger" id="deleteBotBtn">Elimina Bot</button>
-          <button type="button" class="btn btn-success" id="toggleBotBtn">Avvia/Ferma Bot</button>
-          <button type="button" class="btn btn-primary" id="updateBotBtn">Aggiorna Configurazione</button>
+        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="button" id="updateBotBtn" class="ml-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:w-auto sm:text-sm">
+            Aggiorna Configurazione
+          </button>
+          <button type="button" id="toggleBotBtn" class="ml-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-secondary-600 text-base font-medium text-white hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 sm:w-auto sm:text-sm">
+            Avvia/Ferma Bot
+          </button>
+          <button type="button" id="deleteBotBtn" class="ml-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-accent-600 text-base font-medium text-white hover:bg-accent-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 sm:w-auto sm:text-sm">
+            Elimina Bot
+          </button>
+          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm" data-dismiss="modal">
+            Chiudi
+          </button>
         </div>
       </div>
     </div>
   </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl">
+      <div class="flex flex-col items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <p class="mt-4 text-gray-700 dark:text-gray-300">Caricamento in corso...</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notification Toast -->
+  <div id="notificationToast" class="fixed bottom-4 right-4 z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-md border-l-4 border-primary-500">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <i class="bi bi-info-circle text-primary-500 text-xl"></i>
+        </div>
+        <div class="ml-3 w-0 flex-1">
+          <p id="notificationMessage" class="text-sm font-medium text-gray-900 dark:text-white"></p>
+        </div>
+        <div class="ml-4 flex-shrink-0 flex">
+          <button id="closeNotification" class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <span class="sr-only">Close</span>
+            <i class="bi bi-x text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
   <script src="js/api.js"></script>
   <script src="js/ui.js"></script>
-  <script src="js/charts.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/charts.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

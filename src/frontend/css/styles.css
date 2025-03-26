@@ -245,7 +245,7 @@ body.dark-mode .btn-outline-secondary {
   border-color: #adb5bd;
 }
 
-body.dark-mode .text-muted {
+.text-muted {
   color: #adb5bd !important;
 }
 
@@ -266,4 +266,42 @@ body, .card, .modal-content, .form-control, .form-select, .table {
 .form-switch .form-check-input:checked {
   background-color: #6c757d;
   border-color: #6c757d;
+}
+
+.logo{
+  max-width: 15rem;
+}
+
+/* Mobile sidebar styles */
+@media (max-width: 767.98px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100vh;
+    z-index: 1050;
+    padding-top: 1rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  #sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    display: none;
+  }
+  
+  .sidebar-backdrop.show {
+    display: block;
+  }
 }

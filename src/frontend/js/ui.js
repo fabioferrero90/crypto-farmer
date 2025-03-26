@@ -511,6 +511,45 @@ class UiService {
    */
   updateStrategyParams(strategy) {
     const container = document.getElementById('strategyParams');
+    const descriptionContainer = document.getElementById('strategyDescription');
+
+    // Update strategy description
+    if (strategy) {
+      let description = '';
+      switch (strategy) {
+        case 'sma':
+          description = `<div class="alert alert-info">
+            <h6>Strategia Incrocio SMA (Simple Moving Average)</h6>
+            <p>Questa strategia utilizza due medie mobili semplici di periodi diversi (breve e lungo). 
+            Genera un segnale di acquisto quando la media mobile breve incrocia al rialzo la media mobile lunga, 
+            e un segnale di vendita quando la media mobile breve incrocia al ribasso la media mobile lunga. 
+            È efficace in mercati con trend definiti ma può generare falsi segnali in mercati laterali.</p>
+          </div>`;
+          break;
+        case 'rsi':
+          description = `<div class="alert alert-info">
+            <h6>Strategia RSI (Relative Strength Index)</h6>
+            <p>L'RSI è un oscillatore di momentum che misura la velocità e il cambiamento dei movimenti di prezzo. 
+            Varia da 0 a 100 e viene utilizzato per identificare condizioni di ipercomprato (sopra 70) o ipervenduto (sotto 30). 
+            La strategia genera segnali di acquisto quando l'RSI esce dalla zona di ipervenduto e segnali di vendita 
+            quando esce dalla zona di ipercomprato. È particolarmente efficace in mercati laterali o in range.</p>
+          </div>`;
+          break;
+        case 'macd':
+          description = `<div class="alert alert-info">
+            <h6>Strategia MACD (Moving Average Convergence Divergence)</h6>
+            <p>Il MACD è un indicatore di trend che mostra la relazione tra due medie mobili esponenziali. 
+            È composto da una linea MACD (differenza tra EMA veloce e lenta), una linea di segnale (EMA della linea MACD) 
+            e un istogramma. Genera segnali di acquisto quando la linea MACD incrocia al rialzo la linea di segnale, 
+            e segnali di vendita quando incrocia al ribasso. È utile per identificare cambiamenti di momentum, 
+            direzione e forza del trend.</p>
+          </div>`;
+          break;
+      }
+      descriptionContainer.innerHTML = description;
+    } else {
+      descriptionContainer.innerHTML = '';
+    }
 
     if (!strategy) {
       container.innerHTML = '';
@@ -526,10 +565,12 @@ class UiService {
             <div class="col-md-6">
               <label for="shortPeriod" class="form-label">Periodo Breve</label>
               <input type="number" class="form-control" id="shortPeriod" value="9" min="2" max="50">
+              <small class="form-text text-muted">Numero di candele per calcolare la media mobile breve. Valori più bassi reagiscono più velocemente ai cambiamenti di prezzo.</small>
             </div>
             <div class="col-md-6">
               <label for="longPeriod" class="form-label">Periodo Lungo</label>
               <input type="number" class="form-control" id="longPeriod" value="21" min="5" max="200">
+              <small class="form-text text-muted">Numero di candele per calcolare la media mobile lunga. Valori più alti forniscono segnali più affidabili ma meno frequenti.</small>
             </div>
           </div>
         `;
@@ -540,14 +581,17 @@ class UiService {
             <div class="col-md-4">
               <label for="rsiPeriod" class="form-label">Periodo RSI</label>
               <input type="number" class="form-control" id="rsiPeriod" value="14" min="2" max="50">
+              <small class="form-text text-muted">Numero di candele utilizzate per calcolare l'RSI. Il valore standard è 14, valori più bassi aumentano la sensibilità.</small>
             </div>
             <div class="col-md-4">
               <label for="overbought" class="form-label">Livello Ipercomprato</label>
               <input type="number" class="form-control" id="overbought" value="70" min="50" max="90">
+              <small class="form-text text-muted">Soglia sopra la quale il mercato è considerato ipercomprato. Valori standard: 70-80.</small>
             </div>
             <div class="col-md-4">
               <label for="oversold" class="form-label">Livello Ipervenduto</label>
               <input type="number" class="form-control" id="oversold" value="30" min="10" max="50">
+              <small class="form-text text-muted">Soglia sotto la quale il mercato è considerato ipervenduto. Valori standard: 20-30.</small>
             </div>
           </div>
         `;
@@ -558,19 +602,36 @@ class UiService {
             <div class="col-md-4">
               <label for="fastPeriod" class="form-label">Periodo Veloce</label>
               <input type="number" class="form-control" id="fastPeriod" value="12" min="2" max="50">
+              <small class="form-text text-muted">Periodo per la media mobile esponenziale veloce. Valori più bassi reagiscono più rapidamente ai cambiamenti di prezzo.</small>
             </div>
             <div class="col-md-4">
               <label for="slowPeriod" class="form-label">Periodo Lento</label>
               <input type="number" class="form-control" id="slowPeriod" value="26" min="5" max="100">
+              <small class="form-text text-muted">Periodo per la media mobile esponenziale lenta. Valori più alti forniscono una visione più stabile del trend.</small>
             </div>
             <div class="col-md-4">
               <label for="signalPeriod" class="form-label">Periodo Segnale</label>
               <input type="number" class="form-control" id="signalPeriod" value="9" min="2" max="50">
+              <small class="form-text text-muted">Periodo per la linea di segnale (EMA della linea MACD). Determina la sensibilità dei segnali di trading.</small>
             </div>
           </div>
         `;
         break;
     }
+
+    // Add explanations for common bot settings
+    html += `
+      <div class="mt-4 mb-3">
+        <h6>Parametri Generali del Bot</h6>
+        <div class="alert alert-light border">
+          <p class="mb-2"><strong>Coppia di Trading:</strong> La coppia di criptovalute su cui il bot opererà (es. BTC/USDT).</p>
+          <p class="mb-2"><strong>Intervallo:</strong> L'intervallo di tempo tra le candele utilizzate per l'analisi (es. 1m, 5m, 1h, 1d).</p>
+          <p class="mb-2"><strong>Importo:</strong> La quantità di criptovaluta da acquistare/vendere in ogni operazione.</p>
+          <p class="mb-2"><strong>Stop Loss:</strong> Percentuale di perdita massima consentita prima di chiudere automaticamente una posizione per limitare le perdite.</p>
+          <p class="mb-0"><strong>Take Profit:</strong> Percentuale di guadagno desiderata per chiudere automaticamente una posizione e realizzare il profitto.</p>
+        </div>
+      </div>
+    `;
 
     container.innerHTML = html;
   }

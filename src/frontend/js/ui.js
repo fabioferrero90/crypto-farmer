@@ -16,6 +16,7 @@ class UiService {
 
     // Initialize sidebar toggle for mobile
     this.initSidebarToggle();
+    console.log("UiService initialized"); // Added log
   }
 
   /**
@@ -127,6 +128,14 @@ class UiService {
         this.modals[modalId].querySelector('.inline-block').classList.remove('scale-95');
       }, 10);
     }
+  }
+
+  showNotification(message, type = 'success') {
+    console.log("Showing notification", message, type); // Added log
+  }
+
+  showLoading(message = 'Loading...') {
+    console.log("Showing loading indicator", message); // Added log
   }
 
   /**

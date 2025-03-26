@@ -23,8 +23,27 @@ const apiRoutes = require('./routes/api');  // Fixed path: removed 'src/backend/
 app.use('/api', apiRoutes);
 
 // Serve frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/frontend/index.html'));
+app.get('/', (req, res) => {
+  console.log("Sending index.html from route /");
+  res.sendFile(path.join(__dirname, "..", "..", 'src/frontend/index.html'));
+});
+
+app.get("/js/:jsScript", (req, res) => {
+  const jsScript = req.params.jsScript;
+  console.log("Sending file ", jsScript, "from route /js/:jsScript");
+  res.sendFile(path.join(__dirname, "..", "..", 'src/frontend/js', jsScript));
+});
+
+app.get("/assets/:asset", (req, res) => {
+  const asset = req.params.asset;
+  console.log("Sending file ", asset, "from route /assets/:asset");
+  res.sendFile(path.join(__dirname, "..", "..", 'src/frontend/assets', asset));
+});
+
+app.get("/css/:css", (req, res) => {
+  const css = req.params.css;
+  console.log("Sending file ", css, "from route /css/:css");
+  res.sendFile(path.join(__dirname, "..", "..", 'src/frontend/css', css));
 });
 
 // Socket.io connection

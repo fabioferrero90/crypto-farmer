@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoFarmer - Bot di Trading</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+        <div class="position-sticky pt-3">
+          <div class="text-center mb-4">
+            <h3 class="text-light">CryptoFarmer</h3>
+            <p class="text-muted">Pannello di Controllo Bot</p>
+          </div>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" data-page="dashboard">
+                <i class="bi bi-speedometer2 me-2"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="bots">
+                <i class="bi bi-robot me-2"></i>
+                Bot di Trading
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="portfolio">
+                <i class="bi bi-wallet2 me-2"></i>
+                Portafoglio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-page="settings">
+                <i class="bi bi-gear me-2"></i>
+                Impostazioni
+              </a>
+            </li>
+          </ul>
+          
+          <hr class="text-light">
+          
+          <div class="px-3 mt-4">
+            <button id="createBotBtn" class="btn btn-success w-100">
+              <i class="bi bi-plus-circle me-2"></i>
+              Crea Nuovo Bot
+            </button>
+          </div>
+          
+          <!-- Dark Mode Toggle -->
+          <div class="px-3 mt-3 d-flex align-items-center justify-content-between">
+            <span class="text-light">Modalità Scura</span>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="darkModeToggle">
+              <label class="form-check-label text-light" for="darkModeToggle">
+                <i class="bi bi-moon-stars"></i>
+              </label>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Main content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div id="pageContent">
+          <!-- Dashboard Page -->
+          <div id="dashboardPage" class="page-content active">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+              <h1 class="h2">Dashboard</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary refresh-data">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                  <div class="card-body">
+                    <h5 class="card-title">Saldo Totale</h5>
+                    <h2 class="card-text" id="totalBalance">€0.00</h2>
+                    <p class="card-text"><small id="balanceChange">0.00%</small></p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-success text-white">
+                  <div class="card-body">
+                    <h5 class="card-title">Bot Attivi</h5>
+                    <h2 class="card-text" id="activeBots">0</h2>
+                    <p class="card-text"><small>Bot di trading in esecuzione</small></p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-info text-white">
+                  <div class="card-body">
+                    <h5 class="card-title">Profitto Totale</h5>
+                    <h2 class="card-text" id="totalProfit">€0.00</h2>
+                    <p class="card-text"><small id="profitChange">0.00%</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5>Panoramica Prestazioni</h5>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="performanceChart" height="300"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5>Operazioni Recenti</h5>
+                  </div>
+                  <div class="card-body">
+                    <div id="recentTrades" class="list-group">
+                      <!-- Recent trades will be loaded here -->
+                      <div class="text-center text-muted py-3">
+                        <i class="bi bi-clock-history fs-4 d-block mb-2"></i>
+                        Nessuna operazione recente
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Bots Page -->
+          <div id="botsPage" class="page-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+              <h1 class="h2">Bot di Trading</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <button id="refreshBotsBtn" class="btn btn-sm btn-outline-secondary me-2">
+                  <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
+                </button>
+                <button id="newBotBtn" class="btn btn-sm btn-primary">
+                  <i class="bi bi-plus-circle me-1"></i>Nuovo Bot
+                </button>
+              </div>
+            </div>
+            
+            <div class="row" id="botsList">
+              <!-- Bots will be loaded here -->
+              <div class="col-12 text-center text-muted py-5" id="noBotsMessage">
+                <i class="bi bi-robot fs-1 d-block mb-3"></i>
+                <h4>Nessun bot di trading trovato</h4>
+                <p>Clicca sul pulsante "Nuovo Bot" per creare il tuo primo bot di trading.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Portfolio Page -->
+          <div id="portfolioPage" class="page-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+              <h1 class="h2">Portafoglio</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <button id="refreshPortfolioBtn" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-arrow-clockwise me-1"></i>Aggiorna
+                </button>
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h5>Asset</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Asset</th>
+                            <th>Saldo</th>
+                            <th>Valore (USDT)</th>
+                            <th>Allocazione</th>
+                            <th>Variazione 24h</th>
+                          </tr>
+                        </thead>
+                        <tbody id="assetsList">
+                          <!-- Assets will be loaded here -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h5>Allocazione Portafoglio</h5>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="allocationChart" height="250"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Settings Page -->
+          <div id="settingsPage" class="page-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+              <h1 class="h2">Impostazioni</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <button id="saveSettingsBtn" class="btn btn-sm btn-primary">
+                  <i class="bi bi-save me-1"></i>Salva Impostazioni
+                </button>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5>Configurazione API</h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="apiSettingsForm">
+                      <div class="mb-3">
+                        <label for="apiKey" class="form-label">Chiave API</label>
+                        <input type="text" class="form-control" id="apiKey" placeholder="Inserisci la tua Chiave API BitGet">
+                      </div>
+                      <div class="mb-3">
+                        <label for="secretKey" class="form-label">Chiave Segreta</label>
+                        <input type="password" class="form-control" id="secretKey" placeholder="Inserisci la tua Chiave Segreta BitGet">
+                      </div>
+                      <div class="mb-3">
+                        <label for="passphrase" class="form-label">Passphrase</label>
+                        <input type="password" class="form-control" id="passphrase" placeholder="Inserisci la tua Passphrase BitGet">
+                      </div>
+                      <button type="button" id="testApiBtn" class="btn btn-outline-primary">
+                        <i class="bi bi-check-circle me-1"></i>Testa Connessione
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5>Impostazioni Notifiche</h5>
+                  </div>
+                  <div class="card-body">
+                    <form id="notificationSettingsForm">
+                      <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications">
+                        <label class="form-check-label" for="emailNotifications">Notifiche Email</label>
+                      </div>
+                      <div class="mb-3">
+                        <label for="emailAddress" class="form-label">Indirizzo Email</label>
+                        <input type="email" class="form-control" id="emailAddress" placeholder="Inserisci il tuo indirizzo email">
+                      </div>
+                      <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="tradeNotifications">
+                        <label class="form-check-label" for="tradeNotifications">Notifiche Operazioni</label>
+                      </div>
+                      <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="errorNotifications">
+                        <label class="form-check-label" for="errorNotifications">Notifiche Errori</label>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Create Bot Modal -->
+  <div class="modal fade" id="createBotModal" tabindex="-1" aria-labelledby="createBotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createBotModalLabel">Crea Nuovo Bot di Trading</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="createBotForm">
+            <div class="mb-3">
+              <label for="botSymbol" class="form-label">Coppia di Trading</label>
+              <select class="form-select" id="botSymbol" required>
+                <option value="">Seleziona una coppia di trading</option>
+                <option value="BTCUSDT">BTC/USDT</option>
+                <option value="ETHUSDT">ETH/USDT</option>
+                <option value="BNBUSDT">BNB/USDT</option>
+                <option value="ADAUSDT">ADA/USDT</option>
+                <option value="DOGEUSDT">DOGE/USDT</option>
+                <option value="XRPUSDT">XRP/USDT</option>
+                <option value="DOTUSDT">DOT/USDT</option>
+                <option value="SOLUSDT">SOL/USDT</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="botStrategy" class="form-label">Strategia di Trading</label>
+              <select class="form-select" id="botStrategy" required>
+                <option value="">Seleziona una strategia</option>
+                <option value="sma">Incrocio SMA</option>
+                <option value="rsi">Strategia RSI</option>
+                <option value="macd">Strategia MACD</option>
+              </select>
+            </div>
+            
+            <div id="strategyParams">
+              <!-- Strategy parameters will be loaded here based on selection -->
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="botInterval" class="form-label">Intervallo Temporale</label>
+                <select class="form-select" id="botInterval" required>
+                  <option value="1m">1 minuto</option>
+                  <option value="5m">5 minuti</option>
+                  <option value="15m">15 minuti</option>
+                  <option value="30m">30 minuti</option>
+                  <option value="1h" selected>1 ora</option>
+                  <option value="4h">4 ore</option>
+                  <option value="1d">1 giorno</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="botAmount" class="form-label">Importo Operazione</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="botAmount" value="0.001" min="0.0001" step="0.0001" required>
+                  <span class="input-group-text" id="amountSymbol">BTC</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="botStopLoss" class="form-label">Stop Loss (%)</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="botStopLoss" value="5" min="0.1" max="50" step="0.1" required>
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="botTakeProfit" class="form-label">Take Profit (%)</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="botTakeProfit" value="10" min="0.1" max="100" step="0.1" required>
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="botEnabled">
+              <label class="form-check-label" for="botEnabled">Attiva bot immediatamente dopo la creazione</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="button" class="btn btn-primary" id="saveBotBtn">Crea Bot</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bot Details Modal -->
+  <div class="modal fade" id="botDetailsModal" tabindex="-1" aria-labelledby="botDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="botDetailsModalLabel">Dettagli Bot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="botDetailsContent">
+          <!-- Bot details will be loaded here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+          <button type="button" class="btn btn-danger" id="deleteBotBtn">Elimina Bot</button>
+          <button type="button" class="btn btn-success" id="toggleBotBtn">Avvia/Ferma Bot</button>
+          <button type="button" class="btn btn-primary" id="updateBotBtn">Aggiorna Configurazione</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

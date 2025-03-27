@@ -395,6 +395,48 @@ class UiService {
         break;
     }
   }
+
+  updatePortfolioAssets(assets) {
+    const container = document.getElementById('assetsList');
+
+    if (!assets || assets.length === 0) {
+      container.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center">Nessun asset trovato</td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = '';
+
+    assets.forEach(asset => {
+      const changeClass = asset.change >= 0 ? 'success' : 'danger';
+
+      html += `
+        <tr>
+          <td>
+            <strong>${asset.symbol}</strong>
+          </td>
+          <td>${asset.balance.toFixed(8)}</td>
+          <td>€${asset.value.toFixed(2)}</td>
+          <td>
+            <div class="progress" style="height: 6px;">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: ${asset.allocation}%"></div>
+            </div>
+            <small>${asset.allocation.toFixed(2)}%</small>
+          </td>
+          <td class="text-${changeClass}">
+            ${asset.change >= 0 ? '+' : ''}${asset.change.toFixed(2)}%
+          </td>
+        </tr>
+      `;
+    });
+
+    console.log(html)
+
+    container.innerHTML = html;
+  }
 }
 
 // Initialize UI service

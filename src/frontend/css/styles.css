@@ -117,3 +117,24 @@
 .toast-info i {
   @apply text-blue-500;
 }
+
+
+/* Notification animations */
+.notification-item {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.notification-item.opacity-0 {
+  opacity: 0;
+}
+
+/* Ensure the original notification toast is hidden but can be used as template */
+#notificationToast {
+  display: none;
+}
+
+/* Make cloned notifications visible */
+[id^="toast-notification-"] {
+  display: block;
+  width: 30vw;
+}

@@ -7,6 +7,8 @@ class UiService {
     this.currentPage = 'dashboard';
     this.modals = {};
     this.botCards = new Map();
+    this.notifications = []; // Array per tenere traccia delle notifiche attive
+    this.notificationCount = 0; // Contatore per ID univoci
 
     // Initialize navigation
     this.initNavigation();
@@ -130,12 +132,172 @@ class UiService {
     }
   }
 
+  /**
+   * Show a notification toast
+   * @param {string} message - Notification message
+   * @param {string} type - Notification type (success, danger, warning, info)
+   */
   showNotification(message, type = 'success') {
-    console.log("Showing notification", message, type); // Added log
+    console.log("Showing notification", message, type);
+
+    // Genera un ID univoco per questa notifica
+    const notificationId = `notification-${this.notificationCount++}`;
+
+    // Crea un nuovo elemento di notifica
+    const notificationContainer = document.createElement('div');
+    notificationContainer.id = notificationId;
+    notificationContainer.className = 'notification-item mb-3';
+
+    // Clona il template della notifica
+    const template = document.getElementById('notificationToast');
+    const notificationElement = template.cloneNode(true);
+    notificationElement.id = `toast-${notificationId}`;
+    notificationElement.classList.remove('hidden');
+
+    // Imposta il messaggio
+    const messageEl = notificationElement.querySelector('#notificationMessage');
+    messageEl.id = `message-${notificationId}`;
+    messageEl.textContent = message;
+
+    // Aggiorna l'icona e il colore in base al tipo
+    const toastInner = notificationElement.querySelector('.border-l-4');
+    const icon = notificationElement.querySelector('.bi');
+
+    toastInner.classList.remove('border-primary-500', 'border-green-500', 'border-red-500', 'border-yellow-500', 'border-blue-500');
+    icon.classList.remove('bi-info-circle', 'bi-check-circle', 'bi-exclamation-triangle', 'bi-x-circle', 'text-primary-500', 'text-green-500', 'text-red-500', 'text-yellow-500', 'text-blue-500');
+
+    switch (type) {
+      case 'success':
+        toastInner.classList.add('border-green-500');
+        icon.classList.add('bi-check-circle', 'text-green-500');
+        break;
+      case 'danger':
+      case 'error':
+        toastInner.classList.add('border-red-500');
+        icon.classList.add('bi-x-circle', 'text-red-500');
+        break;
+      case 'warning':
+        toastInner.classList.add('border-yellow-500');
+        icon.classList.add('bi-exclamation-triangle', 'text-yellow-500');
+        break;
+      case 'info':
+      default:
+        toastInner.classList.add('border-blue-500');
+        icon.classList.add('bi-info-circle', 'text-blue-500');
+        break;
+    }
+
+    // Aggiungi gestore per il pulsante di chiusura
+    const closeBtn = notificationElement.querySelector('#closeNotification');
+    closeBtn.id = `close-${notificationId}`;
+    closeBtn.addEventListener('click', () => this.removeNotification(notificationId));
+
+    // Aggiungi la notifica al container
+    notificationContainer.appendChild(notificationElement);
+
+    // Crea il container principale se non esiste
+    let notificationsContainer = document.getElementById('notificationsContainer');
+    if (!notificationsContainer) {
+      notificationsContainer = document.createElement('div');
+      notificationsContainer.id = 'notificationsContainer';
+      notificationsContainer.className = 'fixed bottom-4 right-4 z-50 flex flex-col-reverse space-y-reverse space-y-3';
+      document.body.appendChild(notificationsContainer);
+    }
+
+    // Aggiungi la notifica al container principale (all'inizio per averla in basso)
+    notificationsContainer.appendChild(notificationContainer);
+
+    // Aggiungi alla lista di notifiche attive
+    this.notifications.push({
+      id: notificationId,
+      timeout: setTimeout(() => this.removeNotification(notificationId), 5000)
+    });
   }
 
+  /**
+   * Remove a specific notification
+   * @param {string} notificationId - ID of the notification to remove
+   */
+  removeNotification(notificationId) {
+    const notification = document.getElementById(notificationId);
+    if (notification) {
+      // Animazione di fade-out
+      notification.classList.add('opacity-0');
+      setTimeout(() => {
+        notification.remove();
+
+        // Rimuovi dalla lista di notifiche attive
+        const index = this.notifications.findIndex(n => n.id === notificationId);
+        if (index !== -1) {
+          clearTimeout(this.notifications[index].timeout);
+          this.notifications.splice(index, 1);
+        }
+
+        // Rimuovi il container se non ci sono più notifiche
+        if (this.notifications.length === 0) {
+          const container = document.getElementById('notificationsContainer');
+          if (container && container.childNodes.length === 0) {
+            container.remove();
+          }
+        }
+      }, 300);
+    }
+  }
+
+  /**
+   * Hide all notifications
+   */
+  hideNotification() {
+    // Rimuovi tutte le notifiche attive
+    this.notifications.forEach(notification => {
+      clearTimeout(notification.timeout);
+      const element = document.getElementById(notification.id);
+      if (element) element.remove();
+    });
+
+    this.notifications = [];
+
+    // Rimuovi il container
+    const container = document.getElementById('notificationsContainer');
+    if (container) container.remove();
+  }
+
+  /**
+   * Hide notification toast
+   */
+  hideNotification() {
+    const toast = document.getElementById('notificationToast');
+    toast.classList.add('hidden');
+
+    // Clear timeout if exists
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+      this.notificationTimeout = null;
+    }
+  }
+
+  /**
+   * Show loading spinner
+   * @param {string} message - Loading message
+   */
   showLoading(message = 'Loading...') {
-    console.log("Showing loading indicator", message); // Added log
+
+    const spinner = document.getElementById('loadingSpinner');
+    const messageEl = spinner.querySelector('p');
+
+    // Set message
+    messageEl.textContent = message;
+
+    // Show spinner
+    spinner.classList.remove('hidden');
+  }
+
+  /**
+   * Hide loading spinner
+   */
+  hideLoading() {
+    const spinner = document.getElementById('loadingSpinner');
+    spinner.classList.add('hidden');
   }
 
   /**
@@ -161,7 +323,7 @@ class UiService {
   updateStrategyParams(strategy) {
     const container = document.getElementById('strategyParams');
     container.innerHTML = '';
-    
+
     // Add strategy description if a strategy is selected
     if (strategy) {
       const descriptionHTML = getStrategyDescription(strategy);

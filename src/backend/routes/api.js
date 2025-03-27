@@ -226,9 +226,8 @@ router.post('/account', async (req, res) => {
     }
 
     const bitgetService = createBitgetService(apiKey, secretKey, passphrase);
-    const accountInfo = await bitgetService.getAccountInfo();
-
-    res.json(accountInfo);
+    const accountInfo = await bitgetService.getPrivate('/api/spot/v1/account/getInfo');
+    res.json(accountInfo.data);
   } catch (error) {
     console.error('Error fetching account info:', error);
     res.status(500).json({ error: 'Failed to fetch account information' });

@@ -142,7 +142,7 @@ class ApiService {
    * @returns {Promise} - Promise with account data
    */
   async getAccountInfo(credentials) {
-    return this.request('/account', 'POST', credentials);
+    return this.request('/account/assets', 'POST', credentials);
   }
 
   /**

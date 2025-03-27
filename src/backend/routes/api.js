@@ -227,10 +227,27 @@ router.post('/account', async (req, res) => {
 
     const bitgetService = createBitgetService(apiKey, secretKey, passphrase);
     const accountInfo = await bitgetService.getPrivate('/api/spot/v1/account/getInfo');
-    res.json(accountInfo.data);
+    res.json(accountInfo);
   } catch (error) {
     console.error('Error fetching account info:', error);
     res.status(500).json({ error: 'Failed to fetch account information' });
+  }
+});
+
+router.post("/account/assets", async (req, res) => {
+  try {
+    const { apiKey, secretKey, passphrase } = req.body;
+
+    if (!apiKey || !secretKey || !passphrase) {
+      return res.status(400).json({ error: 'Missing API credentials' });
+    }
+
+    const bitgetService = createBitgetService(apiKey, secretKey, passphrase);
+    const accountAssets = await bitgetService.getPrivate('/api/spot/v1/account/assets-lite');
+    res.json(accountAssets);
+  } catch (error) {
+    console.error('Error fetching account assets:', error);
+    res.status(500).json({ error: 'Failed to fetch account assets' });
   }
 });
 

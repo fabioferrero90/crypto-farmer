@@ -1,7 +1,7 @@
 const axios = require('axios');
 const crypto = require('node:crypto');
 
-const ENABLE_HTTP_TRACE = true;
+const ENABLE_HTTP_TRACE = false;
 
 class BitgetService {
   constructor(apiKey, apiSecret, apiPass) {

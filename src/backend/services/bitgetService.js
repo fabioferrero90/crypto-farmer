@@ -99,10 +99,6 @@ class BitgetService {
       }
     }
 
-    console.log("isPublicApi", isPublicApi);
-    console.log("this.apiKey", this.apiKey);
-    console.log("this.apiPass", this.apiPass);
-
     if (isPublicApi || !this.apiKey || !this.apiPass) {
       return {
         ...options,

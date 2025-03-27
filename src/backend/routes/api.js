@@ -244,63 +244,14 @@ router.post("/account/assets", async (req, res) => {
 
     const bitgetService = createBitgetService(apiKey, secretKey, passphrase);
     const accountAssets = await bitgetService.getPrivate('/api/spot/v1/account/assets-lite');
+
+
+
+
     res.json(accountAssets);
   } catch (error) {
     console.error('Error fetching account assets:', error);
     res.status(500).json({ error: 'Failed to fetch account assets' });
-  }
-});
-
-// Test API connection
-router.post('/account/test', async (req, res) => {
-  try {
-    const { apiKey, secretKey, passphrase } = req.body;
-
-    if (!apiKey || !secretKey || !passphrase) {
-      return res.status(400).json({ error: 'Missing API credentials' });
-    }
-
-    // Create BitGet service
-    const bitgetService = createBitgetService(apiKey, secretKey, passphrase);
-
-    // Prima testiamo la connessione base
-    const connectionTest = await bitgetService.testConnection();
-    if (!connectionTest.success) {
-      return res.status(500).json({
-        success: false,
-        error: 'API connection failed',
-        message: connectionTest.error
-      });
-    }
-
-    // Poi testiamo l'autenticazione
-    try {
-      // Proviamo un endpoint che richiede autenticazione
-      const marketData = await bitgetService.getMarketData('BTCUSDT');
-
-      res.json({
-        success: true,
-        message: 'API connection and authentication successful',
-        data: {
-          connected: true,
-          timestamp: Date.now()
-        }
-      });
-    } catch (authError) {
-      // Se la connessione funziona ma l'autenticazione fallisce
-      return res.status(401).json({
-        success: false,
-        error: 'API authentication failed',
-        message: authError.message
-      });
-    }
-  } catch (error) {
-    console.error('API connection test error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'API connection failed',
-      message: error.message || 'Unknown error'
-    });
   }
 });
 

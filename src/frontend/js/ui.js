@@ -437,6 +437,111 @@ class UiService {
 
     container.innerHTML = html;
   }
+
+  updateDashboardStats(stats) {
+    if (stats.totalBalance !== undefined) {
+      document.getElementById('totalBalance').textContent = `$${stats.totalBalance.toFixed(2)}`;
+    }
+
+    if (stats.balanceChange !== undefined) {
+      const balanceChangeEl = document.getElementById('balanceChange');
+      balanceChangeEl.textContent = `${stats.balanceChange > 0 ? '+' : ''}${stats.balanceChange.toFixed(2)}%`;
+      balanceChangeEl.className = stats.balanceChange >= 0 ? 'text-success-light' : 'text-danger-light';
+    }
+
+    if (stats.activeBots !== undefined) {
+      document.getElementById('activeBots').textContent = stats.activeBots;
+    }
+
+    if (stats.totalProfit !== undefined) {
+      document.getElementById('totalProfit').textContent = `$${stats.totalProfit.toFixed(2)}`;
+    }
+
+    if (stats.profitChange !== undefined) {
+      const profitChangeEl = document.getElementById('profitChange');
+      profitChangeEl.textContent = `${stats.profitChange > 0 ? '+' : ''}${stats.profitChange.toFixed(2)}%`;
+      profitChangeEl.className = stats.profitChange >= 0 ? 'text-success-light' : 'text-danger-light';
+    }
+  }
+
+  updateBotsList(bots) {
+    const container = document.getElementById('botsList');
+    const noBotsMessage = document.getElementById('noBotsMessage');
+
+    if (!bots || bots.length === 0) {
+      noBotsMessage.style.display = 'block';
+      container.innerHTML = '';
+      return;
+    }
+
+    noBotsMessage.style.display = 'none';
+    let html = '';
+
+    bots.forEach(bot => {
+      const isRunning = bot.isRunning;
+      const statusClass = isRunning ? 'active' : 'inactive';
+      const statusText = isRunning ? 'In esecuzione' : 'Fermo';
+
+      html += `
+        <div class="col-md-4 mb-4">
+          <div class="card bot-card h-100" data-bot-id="${bot.id}">
+            <div class="card-header">
+              <h5 class="mb-0">${bot.symbol}</h5>
+              <span class="badge bg-${isRunning ? 'success' : 'danger'}">
+                <span class="bot-status ${statusClass}"></span>
+                ${statusText}
+              </span>
+            </div>
+            <div class="card-body">
+              <p class="card-text">Strategy: ${bot.strategy}</p>
+              <p class="card-text">Abilitato: ${bot.enabled ? 'Sì' : 'No'}</p>
+              <button class="btn btn-sm btn-primary view-bot-btn" data-bot-id="${bot.id}">
+                Visualizza Dettagli
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  updateRecentTrades(trades) {
+    const container = document.getElementById('recentTrades');
+
+    if (!trades || trades.length === 0) {
+      container.innerHTML = `
+        <div class="text-center text-muted py-3">
+          <i class="bi bi-clock-history fs-4 d-block mb-2"></i>
+          Nessuna operazione recente
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+
+    trades.forEach(trade => {
+      const isProfit = trade.profit > 0;
+      const tradeType = trade.type === 'buy' ? 'Acquistato' : 'Venduto';
+      const tradeClass = trade.type === 'buy' ? 'buy' : 'sell';
+      const profitClass = isProfit ? 'text-success' : 'text-danger';
+
+      html += `
+        <div class="list-group-item trade-item ${tradeClass}">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1">${tradeType} ${trade.amount} ${trade.symbol.replace('USDT', '')}</h6>
+            <small>${this.formatDate(trade.timestamp)}</small>
+          </div>
+          <p class="mb-1">Prezzo: €${trade.price.toFixed(2)}</p>
+          ${trade.profit !== undefined ? `<small class="${profitClass}">Profitto: ${isProfit ? '+' : ''}€${trade.profit.toFixed(2)}</small>` : ''}
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
 }
 
 // Initialize UI service

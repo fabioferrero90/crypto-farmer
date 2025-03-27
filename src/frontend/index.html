@@ -485,13 +485,13 @@
   </div>
   
   <!-- Notification Toast Template (hidden) -->
-  <div id="notificationToast" class="max-w-[30vw] bottom-4 right-4">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-md border-l-4 border-primary-500">
-      <div class="flex items-start">
+  <div id="notificationToast" class="max-w-[30vw] bottom-4 right-4 w-[fit-content] flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-md border-l-4 border-primary-500 min-w-[20vw] flex items-center">
+      <div class="flex items-center justify-center w-full">
         <div class="flex-shrink-0">
           <i class="bi bi-info-circle text-primary-500 text-xl"></i>
         </div>
-        <div class="ml-3 w-0 flex-1">
+        <div class="ml-3 w-0 flex-1 text-left">
           <p id="notificationMessage" class="text-sm font-medium text-gray-900 dark:text-white"></p>
         </div>
         <div class="ml-4 flex-shrink-0 flex">
@@ -502,7 +502,8 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
   <script src="js/api.js"></script>
